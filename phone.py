@@ -11,6 +11,22 @@ import shutil
 import dingRobot
 import traceback
 
+sousuo="egf"  #搜索
+sousuox="egu"  #搜索框 X
+liebiao="e1w"   #商品列表
+tupianx="bbm"   #图片 X
+tupiancancel="f9o" #图片 取消
+wancheng="b3i"  #完成
+shangpinfanhui="bpp"    #商品页返回
+zhutu="fnr" #主图
+sava10="g72"    #保存10张
+biaoti="f07"    #标题
+jiage="g0_" #价格
+xiaoliang="g6t" #销量
+dianpu="fry"    #店铺
+xiangqing1="dta"
+xiangqing2="dtb"
+
 #logging.basicConfig(level=logging.NOTSET)  # 设置日志级别
 #logger = logging.getLogger("debuginfo")
 # logger = logging.getLogger("airtest")
@@ -87,10 +103,10 @@ for searchName in searchNameList:
     searchNameErrorNum=0
     searchNameNum=0
     dingRobot.sendText(str(datetime.datetime.now())+" 机器号：%s 拼多多 正在爬取关键字:%s"%(pcNum,searchName))
-    if poco("com.xunmeng.pinduoduo:id/eiy").exists():
-        poco("com.xunmeng.pinduoduo:id/eiy").click()        # X 清空输入框
+    if poco("com.xunmeng.pinduoduo:id/"+sousuox).exists():
+        poco("com.xunmeng.pinduoduo:id/"+sousuox).click()        # X 清空输入框
     text(searchName)
-    poco("com.xunmeng.pinduoduo:id/eif").click()            # 搜索
+    poco("com.xunmeng.pinduoduo:id/"+sousuo).click()            # 搜索
     csv_path = mk_dir_file(searchName, pcNum,)
     with open(csv_path, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -103,21 +119,21 @@ for searchName in searchNameList:
         #翻页
         swipeWhileNum=0
         while 1:
-            goodsList=poco("com.xunmeng.pinduoduo:id/e37").child("android.widget.FrameLayout")
+            goodsList=poco("com.xunmeng.pinduoduo:id/"+liebiao).child("android.widget.FrameLayout")
             # 商品列表 
             try:
-                if poco("com.xunmeng.pinduoduo:id/ban").exists():       # 图片 X
-                    poco("com.xunmeng.pinduoduo:id/ban").click()
+                if poco("com.xunmeng.pinduoduo:id/"+tupianx).exists():       # 图片 X
+                    poco("com.xunmeng.pinduoduo:id/"+tupianx).click()
                     continue
-                if poco("com.xunmeng.pinduoduo:id/fd8").exists():       # 图片 save 取消
-                    poco("com.xunmeng.pinduoduo:id/fd8").click()
+                if poco("com.xunmeng.pinduoduo:id/"+tupiancancel).exists():       # 图片 save 取消
+                    poco("com.xunmeng.pinduoduo:id/"+tupiancancel).click()
                     continue
-                if poco("com.xunmeng.pinduoduo:id/b3i").exists():       # 完成
+                if poco("com.xunmeng.pinduoduo:id/"+wancheng).exists():       # 完成
                     print("全部完成")
                     goodsList=[]
                     break
-                if poco("com.xunmeng.pinduoduo:id/bp1").exists():       #商品页 返回<
-                    poco("com.xunmeng.pinduoduo:id/bp1").click()
+                if poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).exists():       #商品页 返回<
+                    poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).click()
                     break
                 if goodsList[0].offspring("com.xunmeng.pinduoduo:id/tv_title").get_text() in nowPageTitle:
                     poco("android:id/content").swipe("up")
@@ -142,8 +158,8 @@ for searchName in searchNameList:
 #                 poco("com.xunmeng.pinduoduo:id/d5d").child("android.widget.ImageView").click()
 #             if poco("com.xunmeng.pinduoduo:id/bcg").exists():
 #                 poco("com.xunmeng.pinduoduo:id/bcg").click()
-            if poco("com.xunmeng.pinduoduo:id/bp1").exists():
-                poco("com.xunmeng.pinduoduo:id/bp1").click()        #商品页 返回<
+            if poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).exists():
+                poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).click()        #商品页 返回<
             if n>1:
                 #翻页问题 一次只获取前两个
                 break
@@ -159,11 +175,11 @@ for searchName in searchNameList:
             try:
                 # pic
                 goodId=int(time.time()*100)
-                poco("com.xunmeng.pinduoduo:id/c0n").click()            #主图
+                poco("com.xunmeng.pinduoduo:id/"+zhutu).click()            #主图
                 swipe((1200,200),(100,200))
                 poco().long_click(duration=2.0)
                 shell("rm -rf /storage/emulated/0/DCIM/Pindd/goods")
-                poco("com.xunmeng.pinduoduo:id/gbf").click()            #保存10张
+                poco("com.xunmeng.pinduoduo:id/"+sava10).click()            #保存10张
                 time.sleep(3)
                 p=Pinyin()
                 pic_path=os.path.join(dir_path, "%s_%s_%s_%s"%
@@ -179,45 +195,37 @@ for searchName in searchNameList:
                             pic_list.append(os.path.join(pic_path,"%s.jpg"%(n+1)).split("\\",1)[1])
                     shutil.rmtree(pic_path+"/goods")
                 except:
-                    print("图片保存失败")
+                    print("图片保存失败,保存截屏，等待10分钟")
+                    snapshot(filename=pic_path)
+                    time.sleep(60*10)
                 
-                poco("com.xunmeng.pinduoduo:id/ban").click()            #图片 X
+                poco("com.xunmeng.pinduoduo:id/"+tupianx).click()            #图片 X
 
-                title=poco("com.xunmeng.pinduoduo:id/f4h").get_text()   #标题
+                title=poco("com.xunmeng.pinduoduo:id/"+biaoti).get_text()   #标题
                 if "活动标签" in title:
                     title=title.split("活动标签")[1]
                 if "退货包运费" in title:
                     title=title.split("退货包运费")[0]
-                price=poco("com.xunmeng.pinduoduo:id/g5g").get_text()       #价格
+                price=poco("com.xunmeng.pinduoduo:id/"+jiage).get_text()       #价格
 
             except Exception as e:
                 traceback.print_exc()
-                dingRobot.sendText(str(datetime.datetime.now())+" 机器号：%s 拼多多 获取信息失败 %s"%(pcNum,repr(e)))
+                # dingRobot.sendText(str(datetime.datetime.now())+" 机器号：%s 拼多多 获取信息失败 %s"%(pcNum,repr(e)))
                 continue
             # 销量
-            if poco("com.xunmeng.pinduoduo:id/gjv").exists():
-                deal=poco("com.xunmeng.pinduoduo:id/gjv").get_text()
-            elif poco("com.xunmeng.pinduoduo:id/g29").exists():
-                deal=poco("com.xunmeng.pinduoduo:id/g29").get_text()
-            elif poco("com.xunmeng.pinduoduo:id/g27").exists():
-                deal=poco("com.xunmeng.pinduoduo:id/g27").get_text()
-            elif poco("com.xunmeng.pinduoduo:id/gh2").exists():
-                deal=poco("com.xunmeng.pinduoduo:id/gh2").get_text()
-            elif poco("com.xunmeng.pinduoduo:id/fzh").exists():
-                deal=poco("com.xunmeng.pinduoduo:id/fzh").get_text()
-            elif poco("com.xunmeng.pinduoduo:id/fzh").exists():
-                deal=poco("com.xunmeng.pinduoduo:id/gb7").get_text()
+            if poco("com.xunmeng.pinduoduo:id/"+xiaoliang).exists():
+                deal=poco("com.xunmeng.pinduoduo:id/"+xiaoliang).get_text()
             else:
                 deal=''
 
             swipeNum=30
-            while not poco("com.xunmeng.pinduoduo:id/fwz").exists():            #店铺
+            while not poco("com.xunmeng.pinduoduo:id/"+dianpu).exists():            #店铺
                 swipeNum-=1
                 if swipeNum<=0:
                     break
                 poco("android:id/content").swipe("up")
             try:
-                shop_info=poco("com.xunmeng.pinduoduo:id/fwz").get_text()       # 店铺
+                shop_info=poco("com.xunmeng.pinduoduo:id/"+dianpu).get_text()       # 店铺
             except PocoNoSuchNodeException:
                 shop_info="None"
 
@@ -232,8 +240,8 @@ for searchName in searchNameList:
 
             try:
                 good_info=dict()
-                keys=poco("com.xunmeng.pinduoduo:id/dui")
-                values=poco("com.xunmeng.pinduoduo:id/duj")
+                keys=poco("com.xunmeng.pinduoduo:id/"+xiangqing1)
+                values=poco("com.xunmeng.pinduoduo:id/"+xiangqing2)
                 for num,key in enumerate(keys):
                     good_info[key.get_text()]=values[num].get_text()
                 # print(good_info)
@@ -254,8 +262,8 @@ for searchName in searchNameList:
                 "pic_path":json.dumps(pic_list)
             }
 
-            if poco("com.xunmeng.pinduoduo:id/bp1").exists():
-                poco("com.xunmeng.pinduoduo:id/bp1").click()        #商品页 返回<
+            if poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).exists():
+                poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).click()        #商品页 返回<
 
             # 保存
             searchNameNum+=1
@@ -264,7 +272,7 @@ for searchName in searchNameList:
                 writer.writerow(["拼多多",d["goodId"], d['shop_info'], d["title"],d['price'], d['deal'],'','','',d['pic_path'],d["good_info"]])
         
 
-        if poco("com.xunmeng.pinduoduo:id/b3i").exists() or swipeWhileNum >=10:
+        if poco("com.xunmeng.pinduoduo:id/"+wancheng).exists() or swipeWhileNum >=10:
             print("全部完成")
             keyevent("KEYCODE_BACK")
             dingRobot.sendText(str(datetime.datetime.now())+" 机器号：%s 拼多多 关键字:%s爬取完成 成功%s条 失败%s条"%(pcNum,searchName,searchNameNum,searchNameErrorNum))
