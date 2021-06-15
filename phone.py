@@ -127,6 +127,9 @@ for searchName in searchNameList:
             goodsList=poco("com.xunmeng.pinduoduo:id/"+liebiao).child("android.widget.FrameLayout")
             # 商品列表 
             try:
+                if poco("com.xunmeng.pinduoduo:id/name").exists():       # 综合
+                    keyevent("KEYCODE_BACK")
+                    continue
                 if poco("com.xunmeng.pinduoduo:id/"+tupianx).exists():       # 图片 X
                     poco("com.xunmeng.pinduoduo:id/"+tupianx).click()
                     continue
@@ -153,8 +156,11 @@ for searchName in searchNameList:
             except PocoNoSuchNodeException:
 #                 if poco("com.xunmeng.pinduoduo:id/bs1").exists():
 #                     poco("com.xunmeng.pinduoduo:id/bs1").click()
-                print("PocoNoSuchNodeException swipe 124")
-                poco("android:id/content").swipe("up")      # 获取标题失败往下滑
+                print("PocoNoSuchNodeException swipe 154")
+                try:
+                    poco("android:id/content").swipe("up")      # 获取标题失败往下滑
+                except:
+                    print("swipe failed")
                 start_app("com.xunmeng.pinduoduo")
                 continue
                 
