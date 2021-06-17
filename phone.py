@@ -11,12 +11,13 @@ import shutil
 import dingRobot
 import traceback
 
+shouyesousuo="pdd"    #首页搜索框
 sousuo="egf"  #搜索
 sousuox="egu"  #搜索框 X
 liebiao="e1w"   #商品列表
 tupianx="bbm"   #图片 X
 tupiancancel="f9o" #图片 取消
-wancheng="b3i"  #完成
+# wancheng="b3i"  #完成
 shangpinfanhui="bpp"    #商品页返回
 zhutu="fnr" #主图
 sava10="g72"    #保存10张
@@ -103,7 +104,8 @@ pcNum="X1"
 #         "翡翠吊坠", "翡翠耳饰", "和田玉吊坠", "和田玉手链", "和田玉戒指", "珍珠项链 ", "珍珠手链", "珍珠耳饰", "珍珠戒指",
 #         "水晶玛瑙手链", "水晶玛瑙项链", "水晶玛瑙耳饰", "水晶玛瑙戒指", "银手镯", "银项链", "银手链", "银戒指", "银耳饰", "宝宝银饰", "投资金", "投资银", "投资收藏"
 #     ]
-searchNameList = [ "灯罩灯", "台灯", "床头灯", "应急灯", "筒灯","射灯", "天花灯", "厨卫灯", "节能灯","荧光灯", "白炽灯", "路灯", "水晶灯", "过道灯", "中式灯", "阳台灯", "美式灯", "日式灯", "欧式灯", "韩式灯", "地中海灯", "儿童灯", "轨道灯", "镜前灯", "杀菌灯", "麻将灯", "庭院灯", "卫浴灯", "浴霸灯","吊灯","壁灯", "吸顶灯", "落地灯", "吊扇灯", "客厅灯","卧室灯","LED灯", "照明灯"]
+
+searchNameList = ["白炽灯", "路灯", "水晶灯", "过道灯", "中式灯", "阳台灯", "美式灯", "日式灯", "欧式灯", "韩式灯", "地中海灯", "儿童灯", "轨道灯", "镜前灯", "杀菌灯", "麻将灯", "庭院灯", "卫浴灯", "浴霸灯", "吊灯", "壁灯", "吸顶灯", "落地灯", "吊扇灯", "客厅灯", "卧室灯", "LED灯", "照明灯"]
 for searchName in searchNameList:
     searchNameErrorNum=0
     searchNameNum=0
@@ -127,6 +129,10 @@ for searchName in searchNameList:
             goodsList=poco("com.xunmeng.pinduoduo:id/"+liebiao).child("android.widget.FrameLayout")
             # 商品列表 
             try:
+                if poco("com.xunmeng.pinduoduo:id/"+shouyesousuo).exists():       # 主页
+                    poco("com.xunmeng.pinduoduo:id/"+shouyesousuo).click()
+                    break
+
                 if poco("com.xunmeng.pinduoduo:id/name").exists():       # 综合
                     keyevent("KEYCODE_BACK")
                     continue
@@ -136,10 +142,10 @@ for searchName in searchNameList:
                 if poco("com.xunmeng.pinduoduo:id/"+tupiancancel).exists():       # 图片 save 取消
                     poco("com.xunmeng.pinduoduo:id/"+tupiancancel).click()
                     continue
-                if poco("com.xunmeng.pinduoduo:id/"+wancheng).exists():       # 完成
-                    print("全部完成")
-                    goodsList=[]
-                    break
+                # if poco("com.xunmeng.pinduoduo:id/"+wancheng).exists():       # 完成
+                #     print("全部完成")
+                #     goodsList=[]
+                #     break
                 if poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).exists():       #商品页 返回<
                     poco("com.xunmeng.pinduoduo:id/"+shangpinfanhui).click()
                     break
@@ -283,7 +289,7 @@ for searchName in searchNameList:
                 writer.writerow(["拼多多",d["goodId"], d['shop_info'], d["title"],d['price'], d['deal'],'','','',d['pic_path'],d["good_info"]])
         
 
-        if poco("com.xunmeng.pinduoduo:id/"+wancheng).exists() or swipeWhileNum >=10:
+        if swipeWhileNum >=50:
             print("全部完成")
             keyevent("KEYCODE_BACK")
             dingRobot.sendText(str(datetime.datetime.now())+" 机器号：%s 拼多多 关键字:%s爬取完成 成功%s条 失败%s条"%(pcNum,searchName,searchNameNum,searchNameErrorNum))
